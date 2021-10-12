@@ -1,0 +1,9 @@
+Are comments used effectively?
+Are there too many/too few comments?
+Do variable names communicate what the variable is storing?
+Is the code easy to read?
+Is the code easy to understand?
+Are there code blocks that can be simplified or removed?
+If there are dependencies, are they justified?
+Can the code be executed without error?
+Does the code exhibit the expected behavior when executed?
