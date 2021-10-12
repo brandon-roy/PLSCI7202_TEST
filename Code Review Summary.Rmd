@@ -68,7 +68,7 @@ In most cases, the variable names are descriptive without being too long or conf
 
 4. Is the code easy to read? Is the code easy to understand?
 
-Without access to the data and limited knowledge of the project setup, this code is difficult to read and understand.
+There are a few indentation inconsistencies. Without access to the data and limited knowledge of the project setup, this code is difficult to read and understand.
 
 5. Are there code blocks that can be simplified or removed?
 
