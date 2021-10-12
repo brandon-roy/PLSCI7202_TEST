@@ -1,0 +1,85 @@
+---
+title: "Code Review Summary"
+author: "Erin Farmer"
+date: "10/12/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary Comments
+1. Are comments used effectively?
+
+The steps taken are outlined in comments. These would be easier to follow if the overall goal of the project/experiment and a description of the data were included.
+
+2. Are there too many/too few comments?
+
+There are too few comments. Chunks of code typically have a comment summarizing the action of the code below. However, within those large chunks of code, commenting can be sparse, making it unclear how that overall goal is achieved. For example:
+
+#Label points with the textxy function from the calibrate plot
+```{r}
+library(calibrate)
+with(subset(res, padj<.05 & abs(log2FoldChange)>1), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.8))
+```
+
+```{r}
+
+p <- ggplot(data=ghuwtvsmut, aes(x=log2FoldChange, y=pvalue)) + geom_point() + theme_minimal()
+p2 <- p + geom_vline(xintercept=c(-2,2), col="red") + geom_hline(yintercept=-log10(0.01),col="red")
+ghuwtvsmut$diffexpressed <- "NO"
+ghuwtvsmut$diffexpressed[ghuwtvsmut$log2FoldChange > 2 & ghuwtvsmut$pvalue < 0.01] <- "UP"
+head(ghuwtvsmut)
+# if log2Foldchange < -0.6 and pvalue < 0.05, set as "DOWN"
+ghuwtvsmut$diffexpressed[ghuwtvsmut$log2FoldChange < -2 & ghuwtvsmut$pvalue < 0.01] <- "DOWN"
+p <- ggplot(data=ghuwtvsmut, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed)) + geom_point() + theme_minimal()
+p2 <- p + geom_vline(xintercept=c(-2, 2), col="red") + geom_hline(yintercept=-log10(0.01), col="red")
+p3 <- p2 + scale_color_manual(values=c("blue", "black", "red"))
+
+mycolors <- c("blue", "red", "black")
+names(mycolors) <- c("DOWN", "UP", "NO")
+p3 <- p2 + scale_colour_manual(values = mycolors)
+
+ghuwtvsmut$delabel <- NA
+ghuwtvsmut$delabel[ghuwtvsmut$diffexpressed != "NO"] <- ghuwtvsmut$gene_symbol[ghuwtvsmut$diffexpressed != "NO"]
+
+ggplot(data=ghuwtvsmut, aes(x=log2FoldChange, y=-log10(pvalue), col=ghuwtvsmut$diffexpressed, label=ghuwtvsmut$delabel)) +
+        geom_point() + 
+        ggtitle("GHu Wild Type vs GHu Mutant K802G, 7DPI") +
+        theme_minimal() +
+        geom_text_repel() +
+        scale_color_manual(values=c("violet", "black", "lightgreen")) +
+        geom_vline(xintercept=c(-2, 2), col="gray") +
+        geom_hline(yintercept=-log10(0.01), col="gray")
+
+cts_vst_i 
+
+redVar7 <- lfcShrink(dds_out_interaction,contrast=c("group","ghu_mut7","ghu_wt7"),alpha=0.01,type='normal')
+topVarGenes7 <- head(order(rowVars(assay(redVar7)),decreasing=T),25)
+top25Counts7 <-assay(redVar7)[topVarGenes7,]
+
+```
+
+
+3. Do variable names communicate what the variable is storing?
+
+In most cases, the variable names are descriptive without being too long or confusing. There are variables that are unclear (e.g. "d," "vst," and "dds"), though this could likely be improved through commenting rather than changing the names.
+
+4. Is the code easy to read? Is the code easy to understand?
+
+There are a few indentation inconsistencies. Without access to the data and limited knowledge of the project setup, this code is difficult to read and understand.
+
+5. Are there code blocks that can be simplified or removed?
+
+Perhaps code blocks could be broken into smaller blocks with additional commenting for ease of readability.
+
+6. If there are dependencies, are they justified?
+
+There are numerous dependencies within this code. Several packages must be downloaded from Bioconductor. However, without more information, I cannot determine if they are necessary or if there are alternatives.
+
+7. Can the code be executed without error? Does the code exhibit the expected behavior when executed?
+
+Without access to the data, I am unable to run this code.
+
+
